@@ -99,18 +99,23 @@ class AlarmNotification {
     required String body,
     required bool fullScreenIntent,
     String? sound,
+    String? channelId,
+    String? channelName,
+    String? channelDescription,
   }) async {
     var iOSPlatformChannelSpecifics = DarwinNotificationDetails(
       presentAlert: true,
       presentBadge: false,
       presentSound: false,
       sound: sound,
+      subtitle: channelDescription,
+      threadIdentifier: 'Harmonie',
     );
 
     final androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'alarm',
-      'alarm_plugin',
-      channelDescription: 'Alarm plugin',
+      channelId ?? 'alarm',
+      channelName ?? 'alarm_plugin',
+      channelDescription: channelDescription ?? 'Alarm plugin',
       importance: Importance.max,
       priority: Priority.max,
       playSound: sound != null ? true : false,
