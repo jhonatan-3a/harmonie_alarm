@@ -98,11 +98,13 @@ class AlarmNotification {
     required String title,
     required String body,
     required bool fullScreenIntent,
+    String? sound,
   }) async {
-    const iOSPlatformChannelSpecifics = DarwinNotificationDetails(
+    var iOSPlatformChannelSpecifics = DarwinNotificationDetails(
       presentAlert: true,
       presentBadge: false,
       presentSound: false,
+      sound: sound,
     );
 
     final androidPlatformChannelSpecifics = AndroidNotificationDetails(
@@ -111,8 +113,9 @@ class AlarmNotification {
       channelDescription: 'Alarm plugin',
       importance: Importance.max,
       priority: Priority.max,
-      playSound: false,
+      playSound: sound != null ? true : false,
       enableLights: true,
+      sound: sound != null ? RawResourceAndroidNotificationSound(sound) : null,
       fullScreenIntent: fullScreenIntent,
     );
 
