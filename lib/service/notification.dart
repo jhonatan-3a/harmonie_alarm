@@ -102,6 +102,7 @@ class AlarmNotification {
     String? channelId,
     String? channelName,
     String? channelDescription,
+    String? payload,
   }) async {
     var iOSPlatformChannelSpecifics = DarwinNotificationDetails(
       presentAlert: true,
@@ -147,6 +148,7 @@ class AlarmNotification {
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
+        payload: payload,
       );
       alarmPrint(
         'Notification with id $id scheduled successfuly at $zdt GMT',
