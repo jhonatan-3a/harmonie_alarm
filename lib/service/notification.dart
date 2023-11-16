@@ -83,19 +83,24 @@ class AlarmNotification {
 
   /// Shows notification permission request.
   Future<bool> requestPermission() async {
-    bool? result;
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      return await localNotif
+              .resolvePlatformSpecificImplementation<
+                  IOSFlutterLocalNotificationsPlugin>()
+              ?.requestPermissions(alert: true, badge: true, sound: true) ??
+          false;
+    } else if (defaultTargetPlatform == TargetPlatform.android) {
+      return await localNotif
+              .resolvePlatformSpecificImplementation<
+                  AndroidFlutterLocalNotificationsPlugin>()
+              ?.requestPermission() ??
+          false;
+    } else if (defaultTargetPlatform == TargetPlatform.macOS) {
+      // Return true for test purposes.
+      return true;
+    }
 
-    result = defaultTargetPlatform == TargetPlatform.android
-        ? await localNotif
-            .resolvePlatformSpecificImplementation<
-                AndroidFlutterLocalNotificationsPlugin>()
-            ?.requestPermission()
-        : await localNotif
-            .resolvePlatformSpecificImplementation<
-                IOSFlutterLocalNotificationsPlugin>()
-            ?.requestPermissions(alert: true, badge: true, sound: true);
-
-    return result ?? false;
+    return false;
   }
 
   tz.TZDateTime nextInstanceOfTime(DateTime dateTime) {
