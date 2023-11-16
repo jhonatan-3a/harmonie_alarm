@@ -16,8 +16,18 @@ class AlarmNotification {
 
   AlarmNotification._();
 
+  static Function(int? id, String? title, String? body, String? payload)?
+      _onNotTapIosAddition;
+  static Function(NotificationResponse response)? _onNotTapAddition;
+
   /// Adds configuration for local notifications and initialize service.
-  Future<void> init() async {
+  Future<void> init({
+    required Function(NotificationResponse response) onNotTap,
+    Function(int? id, String? title, String? body, String? payload)?
+        onNotTapIos,
+  }) async {
+    _onNotTapAddition = onNotTap;
+    _onNotTapIosAddition = onNotTapIos;
     const initializationSettingsAndroid = AndroidInitializationSettings(
       '@mipmap/ic_launcher',
     );
@@ -42,6 +52,7 @@ class AlarmNotification {
 
   // Callback to stop the alarm when the notification is opened.
   static onSelectNotification(NotificationResponse notificationResponse) async {
+    _onNotTapAddition?.call(notificationResponse);
     if (notificationResponse.id == null) return;
     await stopAlarm(notificationResponse.id!);
   }
@@ -49,10 +60,11 @@ class AlarmNotification {
   // Callback to stop the alarm when the notification is opened for iOS versions older than 10.
   static onSelectNotificationOldIOS(
     int? id,
-    String? _,
-    String? __,
-    String? ___,
+    String? title,
+    String? body,
+    String? payload,
   ) async {
+    _onNotTapIosAddition?.call(id, title, body, payload);
     if (id != null) await stopAlarm(id);
   }
 

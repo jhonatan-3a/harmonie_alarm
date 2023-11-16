@@ -9,6 +9,7 @@ import 'package:alarm/src/android_alarm.dart';
 import 'package:alarm/service/notification.dart';
 import 'package:alarm/service/storage.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 /// Custom print function designed for Alarm plugin.
 DebugPrintCallback alarmPrint = debugPrintThrottled;
@@ -29,7 +30,12 @@ class Alarm {
   /// app termination.
   ///
   /// Set [showDebugLogs] to `false` to hide all the logs from the plugin.
-  static Future<void> init({bool showDebugLogs = true}) async {
+  static Future<void> init({
+    bool showDebugLogs = true,
+    required Function(NotificationResponse response) onNotTap,
+    Function(int? id, String? title, String? body, String? payload)?
+        onNotTapIos,
+  }) async {
     alarmPrint = (String? message, {int? wrapWidth}) {
       if (kDebugMode && showDebugLogs) {
         print("[Alarm] $message");
@@ -38,7 +44,8 @@ class Alarm {
 
     await Future.wait([
       if (android) AndroidAlarm.init(),
-      AlarmNotification.instance.init(),
+      AlarmNotification.instance
+          .init(onNotTap: onNotTap, onNotTapIos: onNotTapIos),
       AlarmStorage.init(),
     ]);
     await checkAlarm();
