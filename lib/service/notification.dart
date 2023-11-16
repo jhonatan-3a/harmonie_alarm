@@ -16,15 +16,13 @@ class AlarmNotification {
 
   AlarmNotification._();
 
-  static Function(int? id, String? title, String? body, String? payload)?
-      _onNotTapIosAddition;
+  static Function(NotificationResponse response)? _onNotTapIosAddition;
   static Function(NotificationResponse response)? _onNotTapAddition;
 
   /// Adds configuration for local notifications and initialize service.
   Future<void> init({
     required Function(NotificationResponse response) onNotTap,
-    Function(int? id, String? title, String? body, String? payload)?
-        onNotTapIos,
+    Function(NotificationResponse response)? onNotTapIos,
   }) async {
     _onNotTapAddition = onNotTap;
     _onNotTapIosAddition = onNotTapIos;
@@ -64,7 +62,14 @@ class AlarmNotification {
     String? body,
     String? payload,
   ) async {
-    _onNotTapIosAddition?.call(id, title, body, payload);
+    NotificationResponse response = NotificationResponse(
+      id: id,
+      notificationResponseType: NotificationResponseType.selectedNotification,
+      actionId: title,
+      input: body,
+      payload: payload,
+    );
+    _onNotTapIosAddition?.call(response);
     if (id != null) await stopAlarm(id);
   }
 

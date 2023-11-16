@@ -33,8 +33,7 @@ class Alarm {
   static Future<void> init({
     bool showDebugLogs = true,
     required Function(NotificationResponse response) onNotTap,
-    Function(int? id, String? title, String? body, String? payload)?
-        onNotTapIos,
+    Function(NotificationResponse response)? onNotTapIos,
   }) async {
     alarmPrint = (String? message, {int? wrapWidth}) {
       if (kDebugMode && showDebugLogs) {

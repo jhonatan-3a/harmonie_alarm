@@ -8,8 +8,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  await Alarm.init(
-      showDebugLogs: true, onNotTap: (a) {}, onNotTapIos: (a, b, c, d) {});
+  await Alarm.init(showDebugLogs: true, onNotTap: (a) {}, onNotTapIos: (a) {});
 
   runApp(const MaterialApp(home: ExampleAlarmHomeScreen()));
 }
