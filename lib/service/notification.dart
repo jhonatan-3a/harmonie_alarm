@@ -93,7 +93,7 @@ class AlarmNotification {
       return await localNotif
               .resolvePlatformSpecificImplementation<
                   AndroidFlutterLocalNotificationsPlugin>()
-              ?.requestPermission() ??
+              ?.requestExactAlarmsPermission() ??
           false;
     } else if (defaultTargetPlatform == TargetPlatform.macOS) {
       // Return true for test purposes.
